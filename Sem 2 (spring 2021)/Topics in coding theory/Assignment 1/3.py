@@ -4,7 +4,6 @@ import sympy
 import itertools 
 from sympy import Poly
 from sympy import GF
-from scipy.linalg import lu
 import re
 
 x = sympy.symbols('x')
