@@ -15,8 +15,8 @@ def listgenerator(s):
 
 #Returns 0 if a polynomail is redducible and 1 otherwise
 def GetIrreducible(poly):
-	list = listgenerator(9)
-	for each in list:
+	lst = listgenerator(9)
+	for each in lst:
 		g = each[0] + each[1]*x + each[2]*x**2 + each[3]*x**3 + each[4]*x**4 + each[5]*x**5 + each[6]*x**6 + each[7]*x**7 + each[8]*x**8
 		if(g != 0 and g != 1 and poly != g):
 			if(sympy.div(poly,g)[1] == 0):

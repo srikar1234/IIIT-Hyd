@@ -212,10 +212,10 @@ def run():
 
 	alphas = ffield[0:10]
 
-	msg_poly = input("Enter message polynomial: You can pick coefficients from 0..255")
+	msg_poly = input("Enter message polynomial:")
 	msg_poly = sympy.sympify(msg_poly)
 	print("Message Poly is: " + str(msg_poly))
-	err_poly = input("Enter error polynomial of max degree of 7:")
+	err_poly = input("Enter error polynomial of max degree 3:")
 	print("Error Poly is: "+err_poly)
 	err_poly = sympy.sympify(err_poly)
 

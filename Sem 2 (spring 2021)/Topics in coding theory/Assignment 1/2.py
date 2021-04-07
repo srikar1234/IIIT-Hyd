@@ -52,7 +52,7 @@ def isEncodable(n,k,ffield,msg,msg_poly,irp):
 
 #program starts here
 #we take any random irp
-#since max n = 50 from the question, we take a polynomial of degree 6 as (2^6 > 50) it cam satisfy all the 3 cases
+#since max n = 50 from the question, we take a polynomial of degree 6 as (2^6 > 50) it can satisfy all the 3 cases
 def run():
 	irp = x**6 + x + 1
 	ffield = FF(irp,sympy.degree(irp,gen=x))
