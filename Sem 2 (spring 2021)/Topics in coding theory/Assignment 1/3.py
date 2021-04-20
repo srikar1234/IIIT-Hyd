@@ -19,16 +19,7 @@ def getList(s):
 		poly_lst.append(val)
 	return poly_lst
 
-def Finitefield(irp,d):
-	lst = getList(d+1)
-	poly_lst = []
-	for each in lst:
-		each = sympy.div(each,irp,domain=GF(2, symmetric=False))[1]
-		if each not in poly_lst:
-			poly_lst.append(each)
-	return poly_lst
-
-def genF(beta,irp):
+def generateFiniteField(beta,irp):
 	field = []
 	field.append(sympy.sympify('0'))
 	field.append(sympy.sympify('1'))
@@ -49,7 +40,7 @@ def encode(n,k,ffield,msg_poly,alphas,irp,beta):
 	return codeword
 
 
-def getMsg(n,k,ffield,msg_poly,alphas,irp,beta):
+def getMessage(n,k,ffield,msg_poly,alphas,irp,beta):
 	msg = []
 	for i in range(k):
 		val = sympy.expand(msg_poly.subs(x,alphas[i]))
@@ -63,7 +54,7 @@ def getError(n,k,alphas,err_poly,irp):
 	for each in err_pos:
 		if each < 0:
 			each = each*(-1)
-		n_err.append(each+1)
+		n_err.append(each + 1)
 	err_pos = list(set(n_err))
 	return err_pos
 
@@ -83,18 +74,24 @@ def decode(rx,ffield,alphas,irp,n,k,t,beta):
 	var_e = sympy.symbols('e:'+str(t))
 	var_n = sympy.symbols('n:'+str(n-t))
 
+	#creating polynomial E with its coefficients
 	E = ''
 	for i in range(t):
 		E = E + str(var_e[i])+'*y**'+str(i) +' + '
 	E = E + "y**"+str(t)
+	print("Error polynomial is: ", E)
 	E = sympy.sympify(E)
-
+	
+	#creating polynomial N with its coefficients
 	N = ''
 	for i in range(n-t-1):
 		N = N + str(var_n[i])+'*y**'+str(i) +' + '
 	N = N + str(var_n[n-t-1])+"*y**"+str(n-t-1)
+	print("Other polynomial (N) is: ", N)
 	N = sympy.sympify(N)
 
+	#y(i) * E(alpha i) - N(alpha i) =0
+	#eqs will have n equations
 	eqs = []
 	for i in range(n):
 		exp1 = sympy.expand(E.subs(y,alphas[i]))
@@ -104,20 +101,28 @@ def decode(rx,ffield,alphas,irp,n,k,t,beta):
 		val = sympy.expand(rx[i]*(exp1) - exp2)
 		val = sympy.div(val,irp,domain=GF(2, symmetric=False))[1]
 		eqs.append(val)
+	
+	#storing the coeeficients of E & N
 	symbs = []
 	for each in var_e:
 		symbs.append(each)
 	for each in var_n:
 		symbs.append(each)
+	
+	#This func will sepearate variables from the equations
 	G,H = sympy.linear_eq_to_matrix(eqs, symbs)
+	#G is the coefficients matrix
+	#H is the symbol matrix
+	
+	#
 	A_lst = []
 	for i in range(n):
 		row = G.row(i)
 		A_lst.append(row)
 
-	A = np.zeros((n,n+1))
-	W = np.zeros(n)
 	Ary = []
+	
+	#converting from x to Beta power
 	for i in range(n):
 		arr = []
 		for j in range(n):
@@ -126,21 +131,28 @@ def decode(rx,ffield,alphas,irp,n,k,t,beta):
 				arr.append(sympy.sympify("b**"+str(c-1)))
 			else:
 				arr.append(sympy.sympify("0"))
-			
 		Ary.append(arr)
+	
 	B = []
+	
+	#conerting this from H to B in AX = B form
 	for i in range(n):
 		d = ffield.index(sympy.div(H.row(i)[0],irp,domain=GF(2, symmetric=False))[1])
 		if(d != 0):
 			B.append(sympy.sympify("b**"+str(d-1)))
 		else:
 			B.append(sympy.sympify("0"))
+	
 	A = sympy.Matrix(Ary)
 	B = sympy.Matrix(B)
+	
+	#linear eq solving
 	res = sympy.linsolve((A,B),symbs)
 	res = list(list(res)[0])
-	print("LE solved")
+	
+	print("AX = B eq solved")
 
+	#Parsing through the output, and doing the modulo
 	ans = []
 	for i in range(n):
 		string = str(res[i])[1:-1]
@@ -177,7 +189,9 @@ def decode(rx,ffield,alphas,irp,n,k,t,beta):
 		
 	E = E + "y**"+str(t)
 	E = sympy.sympify(E)
+	
 	print('E : ',E)
+	
 	N= ''
 	for i in range(len(res)-t):
 		if(int(res[i+t])):
@@ -187,41 +201,50 @@ def decode(rx,ffield,alphas,irp,n,k,t,beta):
 	N=N[0:-2]
 	N = sympy.sympify(N)
 	print('N : ',N)
+	
 	M,r = sympy.div(N,E)
 	if(r != 0):
-		print("Error occurred at LE solving. Please try again")
+		print("Error occurred at Linear equation solving, parsing errors.")
 		return
+
 	M = str(M)
 	M = M.replace('y','x')
 	M = sympy.sympify(M)
 	print('M :',M)
+	
 	answer = encode(10,4,ffield,M,alphas,irp,beta)
+	
 	code_vector = ''
 	for each in answer:
 		code_vector = code_vector + ' ' + str(ffield.index(each))
 	print("Decoded Vector :", code_vector)
+	
 	return
 
 def run():
 	irp = x**6 + x + 1
-	ffield = Finitefield(irp,sympy.degree(irp,gen = x))
+	print("Irreducible polynomial: ", irp)
+	
 	beta = x**5
-	ffield = genF(beta,irp)
+	print("Beta:", beta)
 
-	b = sympy.symbols('b')
+	#ordered finite field
+	ffield = generateFiniteField(beta,irp)
 
+	#fist 10 elements
 	alphas = ffield[0:10]
 
 	msg_poly = input("Enter message polynomial:")
 	msg_poly = sympy.sympify(msg_poly)
 	print("Message Poly is: " + str(msg_poly))
-	err_poly = input("Enter error polynomial of max degree 3:")
-	print("Error Poly is: "+err_poly)
-	err_poly = sympy.sympify(err_poly)
-
 	
-	msg = getMsg(10,4,ffield,msg_poly,alphas,irp,beta)
+	err_poly = input("Enter error polynomial of max degree [(n-k)/2]:")
+	err_poly = sympy.sympify(err_poly)
+	print("Error Poly is: ", err_poly)
+
+	msg = getMessage(10,4,ffield,msg_poly,alphas,irp,beta)
 	msg_vector = ''
+	
 	for each in msg:
 		msg_vector = msg_vector + ' ' + str(ffield.index(each))
 	print("Message vector :",msg_vector)
@@ -233,14 +256,14 @@ def run():
 	print("Codeword Vector :", code_vector)
 
 	err = getError(10,4,alphas,err_poly,irp)
-	print('Error at ',err)
+	print("Error at: ", err)
 
 	rx = getRx(codeword,ffield,err)
 	rx_vector = ''
 	for each in rx:
 		rx_vector = rx_vector + ' ' + str(ffield.index(each))
 	print("Recieved Vector :", rx_vector)
-
+	
 	decode(rx,ffield,alphas,irp,10,4,len(err),beta)
 
 run()
