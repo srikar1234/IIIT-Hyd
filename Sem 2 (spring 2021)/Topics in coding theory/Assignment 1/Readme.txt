@@ -14,6 +14,7 @@ Havent tried out much
 2 -> Completed
 3 -> Partial Soln
 Works for very few cases
+{Parsing error in linear eq solver}
 
 4,5 -> Havent done
 
