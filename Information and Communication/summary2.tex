@@ -1,0 +1,310 @@
+\documentclass{article}
+\usepackage[utf8]{}
+\usepackage[a4paper, total={6in, 9in}]{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{sectsty}
+\usepackage{titlesec}
+\usepackage{array}
+\usepackage{wrapfig}
+\usepackage{multirow}
+\usepackage{tabularx}
+\titleformat{\section}[block]{\huge\bfseries\filcenter}{}{1em}{}
+\title{ \Huge Information and Communication}
+\author{Week 2}
+\date{}
+\begin{document}
+\maketitle
+\section{}
+\large
+\subsection{Joint Entropy}
+Joint entropy is the measure of average uncertainty corresponding to a
+set of random variables.
+
+Formally, it can be defined as given below.
+
+The joint entropy of a pair of random variables \(X_1\) ,\(X_2\) with
+the probability distribution \(P(x, y)\) can be defined as
+
+\[H(X_1,X_2)  = \sum_{x_1 \in X_1 \\ x_2 \in X_2} P(X_1 = x_1, X_2 = x_2)log\frac{1}{P(X_1 = x_1, X_2 = x_2)}\]
+
+\textbf{Lemma}: Suppose \(x_1 \in X_1\) and \(x_2 \in X_2\) are independent
+random variables, then
+
+\[H(X_1 , X_2) = H(X_1) + H(X_2)\]
+
+\textbf{Proof}
+
+We know that
+
+\[H(X_1,X_2)  = \sum_{x_1 \in X_1 \\ x_2 \in X_2} P(X_1 = x_1, X_2 = x_2)log\frac{1}{P(X_1 = x_1, X_2 = x_2)} \\\]\\\[
+= \sum_{x_1 \in X_1} \sum_{x_2 \in X_2}P(X_1 = x_1, X_2 = x_2)[log_2\frac{1}{P(X_1=x_1,X_2=x_2)}]\]
+
+Since \( X_1,X_2\) are independent,
+
+\[P(X_1 =x_1, X_2 = x_2) = P(X_1=x_1)P(X_2=x_2) \ \forall x_1 \in X_1, x_2 \in X_2\]
+
+Using this we can write the joint entropy expression as,
+
+\[= \sum_{x_1 \in X_1} \sum_{x_2 \in X_2}P(X_1 = x_1, X_2 = x_2)[log_2\frac{1}{P(X_1=x_1)} + log_2\frac{1}{P(X_2=x_2)}  ] \\
+
+= \sum_{x_1 \in X_1} \sum_{x_2 \in X_2}P(X_1 = x_1, X_2 = x_2)log_2\frac{1}{P(X_1=x_1)} +\sum_{x_1 \in X_1} \sum_{x_2 \in X_2}P(X_1 = x_1, X_2 = x_2) log_2\frac{1}{P(X_2=x_2)}  \\
+
+
+= \sum_{x_1 \in X_1}log_2\frac{1}{P(X_1=x_1)}[\sum_{x_2 \in X_2}P(X_1 = x_1, X_2 = x_2)] + 
+\sum_{x_2 \in X_2}log_2\frac{1}{P(X_2=x_2)}[\sum_{x_1 \in X_1}P(X_1 = x_1, X_2 = x_2)] \\\]
+
+We know that,
+
+\[\sum_{x_2 \in X_2}P(X_1 = x_1, X_2 = x_2) = P(X_1 = x_1)\]
+
+Therefore,
+
+\[\sum_{x_1 \in X_1}log_2\frac{1}{P(X_1=x_1)}[\sum_{x_2 \in X_2}P(X_1 = x_1, X_2 = x_2)] + 
+\sum_{x_2 \in X_2}log_2\frac{1}{P(X_2=x_2)}[\sum_{x_1 \in X_1}P(X_1 = x_1, X_2 = x_2)] = \]\\\[H(X_1) + H(X_2)\]
+
+
+\subsection{Conditional Entropy}
+
+Conditional Entropy (\(H(X_1 | X_2)\)) is the measure of uncertainty
+corresponding to \(X_1\) when we have knowledge about the uncertainty
+corresponding to \(X_2\).
+
+Formally, it can be defined as given below
+
+\[H(X_2|X_1) =\sum_{x_1 \in X_1} P(X_1 = x_1)H(X_2|X_1 = x_1)\]
+
+such that \(P(X_1 = x_1)≠0\)
+
+where
+
+\[H(X_2|X_1 = x_1) = \sum_{x_2 \in X_2} P(X_2 = x_2 |X_1 = x_1)log_2 \frac{1}{P(X_2 = x_2 |X_1 = x_1)}\]
+
+
+\textbf{{\Large Note : }} Let f be a real-valued function whose domain is $\mathcal{X}$. The support of f is a subset of $\mathcal{X}$ where f is non-zero:
+
+\[supp(f) = \{x \in \mathcal{X} : f(x) \neq 0\} \]
+\section{}
+\subsection{Proof : $H(X,Y) = H(X) + H(Y/X)$}
+\Small
+\begin{equation}
+H(X) = \sum_{x \in supp(P_X)}p(x) \log \frac {1}{p(x)} 
+\end{equation}
+
+\begin{equation}
+H(Y/X) = \sum_{x \in supp(P_X)}p(x)\sum_{y \in supp(P_Y)}p(y/x)\log \frac {1}{p(y/x)}
+\end{equation}
+
+But, $p(x)$ can also be expressed as:
+
+\begin{equation*}
+\begin{split}
+p(x) & = \sum_{y \in Y}p(x,y) \\
+ & = \sum_{y \in supp(P_Y)}p(x,y)  + \sum_{y \in Y \backslash supp(P_Y)}p(x,y)
+\end{split}  
+\end{equation*}
+
+By definition, if $y \in Y \backslash supp(P_Y), p(y) = 0 \implies
+p(x,y) = p(y)p(x/y) = 0$
+
+Therefore, 
+
+\begin{equation} \label{eq1}
+\begin{split}
+p(x) & = \sum_{y \in Y}p(x,y) \\
+ & = \sum_{y \in supp(P_Y)}p(x,y)
+\end{split}
+\end{equation}
+
+Substituting (3) in (1):
+
+\begin{equation}
+H(X) = \sum_{x \in supp(P_X)}\sum_{y \in supp(P_Y)}p(x,y) \log \frac {1}{p(x)} 
+\end{equation}
+
+\begin{equation}
+\begin{split}
+H(Y/X) &= \sum_{x \in supp(P_X)}\sum_{y \in supp(P_Y)}p(x)p(y/x)\log \frac {1}{p(y/x)} \\
+&= \sum_{x \in supp(P_X)}\sum_{y \in supp(P_Y)}p(x,y)\log \frac {1}{p(y/x)}
+\end{split}
+\end{equation}
+
+From (4) and (5),
+
+\begin{equation*}
+\begin{split}
+ H(X) + H(Y/X) &=\sum_{x \in supp(P_X)}\sum_{y \in supp(P_Y)}p(x,y)(\log \frac {1}{p(x)} + \log \frac {1}{p(y/x)}) \\
+ &=\sum_{x \in supp(P_X)}\sum_{y \in supp(P_Y)}p(x,y)\log \frac {1}{p(x)p(y/x)} \\
+  &=\sum_{x \in supp(P_X)}\sum_{y \in supp(P_Y)}p(x,y)\log \frac {1}{p(x,y)} \\
+  &= H(X,Y)
+ \end{split}
+\end{equation*}
+
+\subsection*{ Proof : $H(X) \geq 0$}
+
+\begin{equation*}
+H(X) = \sum_{x \in supp(P_X)}p(x) \log \frac {1}{p(x)} 
+\end{equation*}
+
+\begin{equation*}
+p(x) > 0 (x \in supp(P_X)) \implies \log \frac {1}{p(x)} \geq 0 \implies 
+p(x) \log \frac {1}{p(x)} \geq 0
+\end{equation*}
+
+Therefore, $H(X) \geq 0$
+
+\section*{\large Note : Jensen's inequality} 
+\graphicspath{ {./images/} }
+\includegraphics[scale=0.75]{Graph}
+
+
+
+Any $x_3$ between $x_1$ and $x_2$ can be represented as \[x_3 = \lambda_1x_1 + \lambda_2x_2\] where \[\lambda_1, \lambda_2 \geq 0\] and \[\lambda_1 + \lambda_2 = 1\]
+This is called a convex combination of $x_1$ and $x_2$.\newline
+In the same way, the black point on the line connecting $\log(x_1)$ and $\log(x_2)$ can also be represented as 
+\[\lambda_1\log(x_1) + \lambda_2\log(x_2)\]
+From the graph, we can deduce that \[\log(x_3) \geq \lambda_1\log(x_1) + \lambda_2\log(x_2)\]
+This relation is true for concave functions like $log(x)$
+
+\subsection*{Proof : $H(X) \leq \log|\mathcal{X}|$}
+
+\begin{equation*}
+H(X) = \sum_{x \in supp(P_X)}p(x) \log \frac {1}{p(x)} 
+\end{equation*}
+
+\[\sum_{x \in supp(P_X)}p(x) = 1 \implies p(x) \equiv \lambda_x\]
+
+This means that $H(X)$ is a convex combination of $\log\frac{1}{p(x)}$ 
+
+From Jensen's inequality,
+\begin{equation*}
+\begin{split}
+H(X) &\leq \log(\sum_{x \in supp(P_X)}p(x)\frac {1}{p(x)}) \\
+&\leq \log(\sum_{x \in supp(P_X)}1) \\
+&\leq \log(|supp(P_X)|) \\
+&\leq \log(|\mathcal{X}|)
+\end{split}
+\end{equation*}
+
+Therefore, $H(X) \leq \log|\mathcal{X}|$
+\newpage
+\section{}
+\subsection{Jensen's inequality}\\
+Jensen's inequality is satisfied with the equality condition when the function is a straight line.
+
+For strictly concave functions like logarithm,
+
+$f(\lambda_1x_1 + \lambda_2x_2) = \lambda_1f(x_1) +\lambda_2f(x_2)$
+
+when $x_1 = x_2$.
+
+In general, if $\lambda_i \not ={0}$ and $\sum_{i = 1}^{n} \lambda_i = 1$ and Jensen's holds with equality, then
+
+$x_1 = x_2....=x_n$
+
+Now, if we apply this condition to $H(X) \leq log|\mathcal{X}|$,
+
+$\displaystyle\sum_{x\in sup(P_X)}\lambda_x log(1/P(x) \leq log|supp(P_X)|$
+
+then for equality, by above claim, we have
+
+$\frac{1}{P(x)} = Constant$
+
+But we also know,
+
+$\displaystyle\sum_{x\in supp(P_X)}{P(x)} = 1$.
+
+So, we can infer that
+
+$P(x) = \frac{1}{|supp(P_X)|} \forall x \in supp(P_X)$
+
+This distribution is called as a uniform distribution.
+
+\textbf{Lemma:}\\
+So, $H(X) = log|\mathcal{X}|$ iff $P_X$ is uniform and $|supp(P_X)| = |\mathcal{X}|$. This is a necessary and sufficient condition.
+
+---
+
+\subsection{Relative Entropy (or) Information Divergence (or) Kullback-Leibler Divergence} 
+
+Suppose there is a random variable $X$ that has two different probability distributions $p_X$ and $q_X$, then the Relative Entropy/Information Divergence/K-L Divergence can be defined as
+
+$D(p_X||q_X) \triangleq \displaystyle\sum_{x\in supp(p_X)} p(x) log(p(x)/q(x))$
+
+\textbf{This expression clearly depends on the order of the arguments.}
+
+Divergence can be \textbf{intuitively} thought of as a distance measure between different probability distributions.
+
+Claim: $D(p||q) \geq 0$
+
+Proof:
+
+We first manipulate the expression to use Jensen's inequality.
+
+$D(p||q) = - \displaystyle\sum_{x\in supp(p_X)}p(x) log(q(x)/p(x))$
+
+Now, we can say that
+
+$-\displaystyle\sum_{x\in supp(p_X)}p(x) log(q(x)/p(x)) \geq -log(\displaystyle\sum_{x\in supp(p_X)}q(x))$
+
+using Jensen's inequality. Now, we can say that $\displaystyle\sum_{x\in supp(p_X)}q(x) \leq 1$, and hence, the minimum value the RHS can take is zero. So,
+
+$-\displaystyle\sum_{x\in supp(p_X)}p(x) log(q(x)/p(x)) \geq 0$
+
+Hence, proved.
+
+When we apply equality conditon for Jensen's, we get
+
+$\frac{p(x)}{q(x)} = Constant$
+$\implies p(x) = C\cdot q(x) \ \forall x \in supp(p_X)$
+
+Now, if we take summation on both sides, we get 1 on the LHS and $\displaystyle\sum_{x \in supp(p_X)} C\cdot q(x)$
+
+Now, as $p(x)/q(x) = Constant \ \forall x \in supp(p_X)$, we can say that $|supp(q_X)| \geq |supp(p_X)|$. If $|supp(q_X)| > |supp(p_X)|$, then C will have to be greater than 1, and this is impossible as
+
+$C = \displaystyle(\sum_{x \in supp(p_X)}p(x)/\sum_{x \in supp(p_X)}q(x))$
+$\implies C = 1/\displaystyle\sum_{x \in supp(p_X)}q(x)$.
+
+But the max value that $\displaystyle\sum_{x \in supp(p_X)}q(x)$ can take is 1.
+
+So, this is a contradiction, and hence, $|supp(q_X)| = |supp(p_X)|$
+
+So, from this, we can say that C = 1 and hence, the two probability distributions are equal for divergence equal to 0.
+
+$\therefore D(p||q) = 0$ iff $p_X = q_X$.
+
+\
+Going back to conditional entropy,
+
+Claim: $0 \leq H(X|Y) \leq H(X)$
+
+For $H(X|Y) \geq 0$, we can consider the conditional probability to be another distribution for X, and hence, the proof is the same as it was for $H(X)$.
+
+For the upper bound,
+
+$H(X) - H(X|Y)$
+
+We can write this as,
+
+$\displaystyle\sum_{x\in supp(p_X), y \in supp(p_Y)}p(x, y) log(1/p(x)) - \displaystyle\sum_{x\in supp(p_X), y \in supp(p_Y)}p(x, y) log(1/p(x|y))$
+
+$= \displaystyle\sum_{x\in supp(p_X), y \in supp(p_Y)}p(x, y) log(p(x|y)/p(x))$
+
+On expanding the conditional probability term, we get,
+
+$= \displaystyle\sum_{x\in supp(p_X), y \in supp(p_Y)}p(x, y) log(p(x, y)/(p(x)\cdotp(y)))$
+
+Here, both the terms in division in the log term can be proven to be valid joint probability distributions.
+
+So, we can now say that
+
+$H(X) - H(X|Y) = D(p(x, y)||p_X(x)\cdot p_Y(y)$
+
+which is always greater than or equal to zero.
+
+Hence, we have proved that $H(X|Y) \leq H(X)$.
+
+---
+
+\end{document}
